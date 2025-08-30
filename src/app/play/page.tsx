@@ -1652,7 +1652,6 @@ function PlayPageClient() {
                     !/OPPO/i.test(userAgent) &&     // 排除OPPO浏览器
                     !/OppoBrowser/i.test(userAgent) && // 排除OppoBrowser
                     !/HeyTapBrowser/i.test(userAgent) && // 排除HeyTapBrowser (OPPO新版浏览器)
-                    !/ColorOS/i.test(userAgent) &&  // 排除ColorOS浏览器 (OPPO系统浏览器)
                     !/OnePlus/i.test(userAgent) &&  // 排除OnePlus浏览器
                     !/Xiaomi/i.test(userAgent) &&   // 排除小米浏览器
                     !/MIUI/i.test(userAgent) &&     // 排除MIUI浏览器
@@ -1671,9 +1670,9 @@ function PlayPageClient() {
       isMobile,
       isWebKit,
       isChrome,
-      'AirPlay按钮': (isIOS || isSafari) && !isChrome ? '✅ 显示' : '❌ 隐藏',
-      'Chromecast按钮': isChrome ? '✅ 显示' : '❌ 隐藏',
-      '投屏策略': isChrome ? '📺 Chromecast (Cast API)' : (isIOS || isSafari) ? '🍎 AirPlay (WebKit)' : '❌ 不支持投屏'
+      'AirPlay按钮': isIOS || isSafari ? '✅ 显示' : '❌ 隐藏',
+      'Chromecast按钮': isChrome && !isIOS ? '✅ 显示' : '❌ 隐藏',
+      '投屏策略': isIOS || isSafari ? '🍎 AirPlay (WebKit)' : isChrome ? '📺 Chromecast (Cast API)' : '❌ 不支持投屏'
     });
 
     // 优先使用ArtPlayer的switch方法，避免重建播放器
@@ -1765,9 +1764,9 @@ function PlayPageClient() {
         fastForward: true,
         autoOrientation: true,
         lock: true,
-        // AirPlay 优先级：只有非Chrome的Safari/iOS设备才显示AirPlay
-        // 这样Chrome浏览器在iOS上也会显示Chromecast而不是AirPlay
-        airplay: (isIOS || isSafari) && !isChrome,
+        // AirPlay 仅在支持 WebKit API 的浏览器中启用
+        // 主要是 Safari (桌面和移动端) 和 iOS 上的其他浏览器
+        airplay: isIOS || isSafari,
         moreVideoAttr: {
           crossOrigin: 'anonymous',
         },
@@ -2051,10 +2050,10 @@ function PlayPageClient() {
             width: 300, // 当播放器宽度小于此值时，弹幕控件置于播放器底部，确保移动端正常显示
           }),
           // Chromecast 插件加载策略：
-          // Chrome 浏览器（包括iOS Chrome）：显示 Chromecast
-          // Safari 和其他iOS浏览器：显示 AirPlay（由上面的airplay选项控制）
-          // 其他浏览器：不显示投屏按钮
-          ...(isChrome ? [
+          // 只在 Chrome 浏览器中显示 Chromecast（排除 iOS Chrome）
+          // Safari 和 iOS：不显示 Chromecast（用原生 AirPlay）
+          // 其他浏览器：不显示 Chromecast（不支持 Cast API）
+          ...(isChrome && !isIOS ? [
             artplayerPluginChromecast({
               onStateChange: (state) => {
                 console.log('Chromecast state changed:', state);

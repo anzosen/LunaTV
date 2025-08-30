@@ -182,8 +182,6 @@ export default function artplayerPluginChromecast(option) {
       hasOPR: /OPR/i.test(userAgent),
       hasSamsung: /SamsungBrowser/i.test(userAgent),
       hasOPPO: /OPPO/i.test(userAgent),
-      hasOppoBrowser: /OppoBrowser/i.test(userAgent),
-      hasHeyTapBrowser: /HeyTapBrowser/i.test(userAgent),
       hasColorOS: /ColorOS/i.test(userAgent),
       hasOneplus: /OnePlus/i.test(userAgent),
       hasXiaomi: /Xiaomi/i.test(userAgent),
@@ -201,9 +199,7 @@ export default function artplayerPluginChromecast(option) {
                     !/OPR/i.test(userAgent) &&      // 排除Opera
                     !/SamsungBrowser/i.test(userAgent) && // 排除三星浏览器
                     !/OPPO/i.test(userAgent) &&     // 排除OPPO浏览器
-                    !/OppoBrowser/i.test(userAgent) && // 排除OppoBrowser
-                    !/HeyTapBrowser/i.test(userAgent) && // 排除HeyTapBrowser (OPPO新版浏览器)
-                    !/ColorOS/i.test(userAgent) &&  // 排除ColorOS浏览器 (OPPO系统浏览器)
+                    !/ColorOS/i.test(userAgent) &&  // 排除ColorOS浏览器
                     !/OnePlus/i.test(userAgent) &&  // 排除OnePlus浏览器
                     !/Xiaomi/i.test(userAgent) &&   // 排除小米浏览器
                     !/MIUI/i.test(userAgent) &&     // 排除MIUI浏览器
@@ -219,12 +215,11 @@ export default function artplayerPluginChromecast(option) {
     console.log('🎯 Chromecast Detection Result:', {
       isChrome: isChrome,
       isIOS: isIOS,
-      shouldShowChromecast: isChrome
+      shouldShowChromecast: isChrome && !isIOS
     });
     
-    // 如果不是Chrome浏览器，直接返回空插件，不添加任何控件
-    // 注意：现在Chrome在iOS上也可以显示Chromecast
-    if (!isChrome) {
+    // 如果不是Chrome浏览器或者是iOS，直接返回空插件，不添加任何控件
+    if (!isChrome || isIOS) {
       console.log('❌ Chromecast plugin: Browser not supported, skipping control addition');
       return {
         name: 'artplayerPluginChromecast',

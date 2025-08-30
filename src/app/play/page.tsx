@@ -1671,9 +1671,11 @@ function PlayPageClient() {
       isMobile,
       isWebKit,
       isChrome,
-      'AirPlay按钮': (isIOS || isSafari) && !isChrome ? '✅ 显示' : '❌ 隐藏',
-      'Chromecast按钮': isChrome ? '✅ 显示' : '❌ 隐藏',
-      '投屏策略': isChrome ? '📺 Chromecast (Cast API)' : (isIOS || isSafari) ? '🍎 AirPlay (WebKit)' : '❌ 不支持投屏'
+      'AirPlay配置': (isIOS || isSafari) && !isChrome ? '✅ 开启' : '❌ 关闭',
+      'AirPlay按钮': (isIOS || isSafari) && !isChrome && 'WebKitPlaybackTargetAvailabilityEvent' in window ? '✅ 将显示' : '❌ 不显示',
+      'Chromecast插件': isChrome ? '✅ 加载' : '❌ 不加载',
+      'Chromecast按钮': isChrome ? '✅ 将显示' : '❌ 不显示',
+      '最终投屏方案': isChrome ? '📺 Chromecast' : (isIOS || isSafari) ? '🍎 AirPlay' : '❌ 无投屏'
     });
 
     // 优先使用ArtPlayer的switch方法，避免重建播放器
@@ -1765,8 +1767,8 @@ function PlayPageClient() {
         fastForward: true,
         autoOrientation: true,
         lock: true,
-        // AirPlay 优先级：只有非Chrome的Safari/iOS设备才显示AirPlay
-        // 这样Chrome浏览器在iOS上也会显示Chromecast而不是AirPlay
+        // AirPlay 显示策略：只有Safari或非Chrome的iOS浏览器才显示AirPlay
+        // Chrome浏览器（包括iOS Chrome）优先显示Chromecast
         airplay: (isIOS || isSafari) && !isChrome,
         moreVideoAttr: {
           crossOrigin: 'anonymous',

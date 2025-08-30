@@ -184,7 +184,6 @@ export default function artplayerPluginChromecast(option) {
     console.log('🔍 Chromecast Plugin Debug:', {
       userAgent: userAgent,
       hasChrome: /Chrome/i.test(userAgent),
-      hasCriOS: /CriOS/i.test(userAgent),
       hasEdg: /Edg/i.test(userAgent),
       hasOPR: /OPR/i.test(userAgent),
       hasSamsung: /SamsungBrowser/i.test(userAgent),
@@ -203,7 +202,7 @@ export default function artplayerPluginChromecast(option) {
       hasSogou: /SogouMobileBrowser/i.test(userAgent),
     });
     
-    const isChrome = (/Chrome/i.test(userAgent) || /CriOS/i.test(userAgent)) && 
+    const isChrome = /Chrome/i.test(userAgent) && 
                     !/Edg/i.test(userAgent) &&      // 排除Edge
                     !/OPR/i.test(userAgent) &&      // 排除Opera
                     !/SamsungBrowser/i.test(userAgent) && // 排除三星浏览器

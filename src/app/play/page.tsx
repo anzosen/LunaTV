@@ -1643,9 +1643,9 @@ function PlayPageClient() {
     const isIOS = /iPad|iPhone|iPod/i.test(userAgent) && !(window as any).MSStream;
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || isIOS;
     const isWebKit = isSafari || isIOS;
-    // Chrome浏览器检测 - 包括iOS Chrome (CriOS) 和桌面Chrome
+    // Chrome浏览器检测 - 只有真正的Chrome才支持Chromecast
     // 排除各种厂商浏览器，即使它们的UA包含Chrome字样
-    const isChrome = (/Chrome/i.test(userAgent) || /CriOS/i.test(userAgent)) && 
+    const isChrome = /Chrome/i.test(userAgent) && 
                     !/Edg/i.test(userAgent) &&      // 排除Edge
                     !/OPR/i.test(userAgent) &&      // 排除Opera
                     !/SamsungBrowser/i.test(userAgent) && // 排除三星浏览器
@@ -1667,15 +1667,10 @@ function PlayPageClient() {
     console.log('🔍 设备检测结果:', {
       userAgent,
       isIOS,
-      isSafari, 
+      isSafari,
       isMobile,
       isWebKit,
       isChrome,
-      '计算过程': {
-        'isIOS || isSafari': isIOS || isSafari,
-        '!isChrome': !isChrome,
-        '最终airplay配置': (isIOS || isSafari) && !isChrome
-      },
       'AirPlay配置': (isIOS || isSafari) && !isChrome ? '✅ 开启' : '❌ 关闭',
       'AirPlay按钮': (isIOS || isSafari) && !isChrome && 'WebKitPlaybackTargetAvailabilityEvent' in window ? '✅ 将显示' : '❌ 不显示',
       'Chromecast插件': isChrome ? '✅ 加载' : '❌ 不加载',

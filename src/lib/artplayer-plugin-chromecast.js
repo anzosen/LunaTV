@@ -62,12 +62,6 @@ export default function artplayerPluginChromecast(option) {
         return
       }
 
-      // 在iOS上Cast API可能不可用，添加特殊处理
-      const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
-      if (isIOS) {
-        console.warn('Chromecast: Running on iOS, Cast API support may be limited')
-      }
-
       window.__onGCastApiAvailable = (isAvailable) => {
         if (isAvailable) {
           try {
